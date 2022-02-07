@@ -39,8 +39,12 @@ const reducer = (state, action) => {
           },
         ],
       };
-    case "DONE_NOTE": {
-      return;
+    case "REMOVE_NOTE": {
+      const updateArray = state.notes.filter((item) => item.id !== action.id);
+      return {
+        ...state,
+        notes: updateArray,
+      };
     }
     default:
       return state;
@@ -49,6 +53,7 @@ const reducer = (state, action) => {
 
 export const Provider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  // Ensure using the correct parameter on passing into the dispatcher
 
   const addTodoItem = (todo) => {
     dispatch({
@@ -57,17 +62,17 @@ export const Provider = ({ children }) => {
     });
   };
 
-  const doneTodo = (todo) => {
+  const removeTodo = (id) => {
     dispatch({
-      type: "DONE_NOTE",
-      todo: todo,
-      doneTodo: doneTodo,
+      type: "REMOVE_NOTE",
+      id: id,
     });
   };
 
   const value = {
     notes: state.notes,
     addTodoItem: addTodoItem,
+    removeTodo: removeTodo,
   };
 
   return (

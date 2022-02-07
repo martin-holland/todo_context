@@ -5,22 +5,23 @@ import classes from "./TodoList.module.css";
 import { NotesContext } from "../store/todoStore";
 
 const TodoList = () => {
-  const context = useContext(NotesContext);
+  const ctx = useContext(NotesContext);
 
-  const clickHandler = (noteId) => {
-    console.log(noteId + "div clicked");
+  const removeHandler = (id) => {
+    console.log(id + "div clicked");
+    ctx.removeTodo(id);
   };
 
-  console.log(context);
+  console.log(ctx);
   return (
     <div className={classes.todos}>
       <h1>Notes:</h1>
-      {context.notes.map((note) => {
+      {ctx.notes.map((note) => {
         return (
           <div
             className={classes.todo}
             key={note.id}
-            onClick={() => clickHandler(note.id)}
+            onClick={() => removeHandler(note.id)}
           >
             <h2>
               {note.id}. {note.title}
