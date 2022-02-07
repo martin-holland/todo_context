@@ -1,17 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import classes from "./AddTodo.module.css";
 import Button from "../UI/Button";
 
-const AddTodo = ({ addHandler }) => {
+import { NotesContext } from "../store/todoStore";
+
+const AddTodo = () => {
   const [todo, setTodo] = useState({ title: "", task: "" });
-  const onChangeHandler = (event) => {
+  const ctx = useContext(NotesContext);
+
+  const onChangeHandler = (e) => {
     // setTasks(([event.target.name] = event.target.value));
     // console.log(tasks);
-    const { name, value } = event.target;
+    const { name, value } = e.target;
 
     setTodo((prevState) => ({ ...prevState, [name]: value }));
+  };
 
-    console.log(todo);
+  const addHandler = (e) => {
+    e.preventDefault();
+    console.log("form submit works");
+    ctx.addTodoItem(todo);
   };
 
   return (
