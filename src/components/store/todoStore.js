@@ -12,7 +12,7 @@ const initialState = {
       id: 2,
       title: "Clean app",
       task: "Delete and clean unnecessary stuff",
-      done: false,
+      done: true,
     },
     {
       id: 3,
@@ -33,19 +33,27 @@ const reducer = (state, action) => {
           ...state.notes,
           {
             id: new Date().valueOf(),
-            title: action.todo.title,
-            task: action.todo.task,
+            ...action.todo,
             done: false,
           },
         ],
       };
-    case "REMOVE_NOTE": {
+    case "REMOVE_NOTE":
       const updateArray = state.notes.filter((item) => item.id !== action.id);
       return {
         ...state,
         notes: updateArray,
       };
-    }
+    case "DONE_NOTE":
+      const doneToggle = state.notes.map((item) => {
+        return item.id === action.id
+          ? { ...item, done: !item.done }
+          : { ...item };
+      });
+      return {
+        ...state,
+        notes: doneToggle,
+      };
     default:
       return state;
   }
@@ -53,7 +61,6 @@ const reducer = (state, action) => {
 
 export const Provider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  // Ensure using the correct parameter on passing into the dispatcher
 
   const addTodoItem = (todo) => {
     dispatch({
@@ -68,11 +75,18 @@ export const Provider = ({ children }) => {
       id: id,
     });
   };
+  const doneTodo = (id) => {
+    dispatch({
+      type: "DONE_NOTE",
+      id: id,
+    });
+  };
 
   const value = {
     notes: state.notes,
     addTodoItem: addTodoItem,
     removeTodo: removeTodo,
+    doneTodo: doneTodo,
   };
 
   return (
